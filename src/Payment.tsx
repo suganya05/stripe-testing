@@ -30,7 +30,9 @@ const Payment = () => {
 
       if (initSheet.error) return Alert.alert(initSheet.error.message);
 
-      const presentSheet = await stripe.presentPaymentSheet(clientSecret);
+      const presentSheet = await stripe.presentPaymentSheet({
+        clientSecret,
+      });
 
       if (presentSheet.error) return Alert.alert(presentSheet.error.message);
 
