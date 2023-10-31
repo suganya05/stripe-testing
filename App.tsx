@@ -1,14 +1,13 @@
 import React from "react";
 import { StripeProvider } from "@stripe/stripe-react-native";
-import StripeApp from "./src/StripApp";
+import Payment from "./src/Payment";
 
-const PUBLISHABLE_KEY =
-  "pk_test_51O6p0wSGEesR2xZcTMeDvXgwTJgLfsOMehC1tZcDo7bphTUPo65HjeJJUcKIRYTqA115nRZi3CbzYH2GsuY69Htf00ewXq6Z7m";
+const PUBLISHABLE_KEY = process.env.PUBLISHABLE_KEY || "YOUR_DEFAULT_KEY";
 
 const App: React.FC = () => {
   return (
     <StripeProvider publishableKey={PUBLISHABLE_KEY}>
-      <StripeApp />
+      <Payment />
     </StripeProvider>
   );
 };
