@@ -3,66 +3,61 @@ import { View, StyleSheet, TextInput, Button, Alert } from "react-native";
 import { CardField, useConfirmPayment } from "@stripe/stripe-react-native";
 import axios from "axios";
 
-//ADD localhost address of your server
-const API_URL = "http://localhost:3002";
-
 const StripeApp = () => {
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState<string>();
   const [cardDetails, setCardDetails] = useState<string>("4242 4242 4242 4242");
   const { confirmPayment, loading } = useConfirmPayment();
 
   const fetchPaymentIntentClientSecret = async () => {
-    const data = {
-      amount: 100,
-    };
-    // const response = fetch("https://www.boredapi.com/api/activity").then(() => {
-    //   console.log("done");
-    // });
-    // const response = await fetch("http://localhost:3001");
-
-    // const res = await response.json();
-    // return { clientSecret, error };
-    // console.log(res);
-    axios({
-      method: "get",
-      url: "http://localhost:3001",
-    }).then((res) => {
-      console.log(res.data);
-    });
-  };
-
-  const handlePayPress = async () => {
-    //1.Gather the customer's billing information (e.g., email)
-    if (!cardDetails || !email) {
-      Alert.alert("Please enter Complete card details and Email");
-      return;
-    }
-    const billingDetails = {
-      email: email,
-    };
-    //2.Fetch the intent client secret from the backend
     try {
-      const { clientSecret, error } = await fetchPaymentIntentClientSecret();
-      //2. confirm the payment
-      if (error) {
-        console.log("Unable to process payment");
-      } else {
-        const { paymentIntent, error } = await confirmPayment(clientSecret, {
-          type: "Card",
-          billingDetails: billingDetails,
-        });
-        if (error) {
-          alert(`Payment Confirmation Error ${error.message}`);
-        } else if (paymentIntent) {
-          alert("Payment Successful");
-          console.log("Payment successful ", paymentIntent);
+      const data = {
+        amount: 100,
+      };
+
+      const createData = await axios.post(
+        "http://192.168.43.117:3001/create-payment-intent",
+        {
+          ...data,
         }
-      }
-    } catch (e) {
-      console.log(e);
+      );
+      console.log("jhiihuuhuhuhuhuhuhuh", createData);
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
-    //3.Confirm the payment with the card details
   };
+
+  // const handlePayPress = async () => {
+  //   //1.Gather the customer's billing information (e.g., email)
+  //   if (!cardDetails || !email) {
+  //     Alert.alert("Please enter Complete card details and Email");
+  //     return;
+  //   }
+  //   const billingDetails = {
+  //     email: email,
+  //   };
+  //   //2.Fetch the intent client secret from the backend
+  //   try {
+  //     const { clientSecret, error } = await fetchPaymentIntentClientSecret();
+  //     //2. confirm the payment
+  //     if (error) {
+  //       console.log("Unable to process payment");
+  //     } else {
+  //       const { paymentIntent, error } = await confirmPayment(clientSecret, {
+  //         type: "Card",
+  //         billingDetails: billingDetails,
+  //       });
+  //       if (error) {
+  //         alert(`Payment Confirmation Error ${error.message}`);
+  //       } else if (paymentIntent) {
+  //         alert("Payment Successful");
+  //         console.log("Payment successful ", paymentIntent);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  //   //3.Confirm the payment with the card details
+  // };
 
   return (
     <View style={styles.container}>
@@ -75,12 +70,12 @@ const StripeApp = () => {
       />
       <CardField
         postalCodeEnabled={true}
-        placeholder={{
+        placeholders={{
           number: "4242 4242 4242 4242",
         }}
         cardStyle={styles.card}
         style={styles.cardContainer}
-        onCardChange={(cardDetails) => {
+        onCardChange={(cardDetails: any) => {
           setCardDetails(cardDetails);
         }}
       />
@@ -102,7 +97,6 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#efefefef",
-
     borderRadius: 8,
     fontSize: 20,
     height: 50,
